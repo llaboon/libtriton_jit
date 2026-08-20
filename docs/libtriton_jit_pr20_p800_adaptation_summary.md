@@ -22,8 +22,8 @@
 - 三个算子的 Triton kernel 及 C++ launch 配置。
 - `run_all_tests.py` backend 选项和测试框架同步逻辑。
 
-## 验证边界
+## 验证
 
-源码构建和静态检查已完成。旧分支 `klx/p800-xpu-launch` 的 `b593f60` 曾报告 23/23，但该结果属于旧 backend 基线。当前 PR-20 rebase 分支的 quick 测试仍存在首个 kernel compile/launch 超时，因此本 PR 不把旧分支 23/23 作为当前分支的验收证据。
+源码构建和静态检查已完成。PR-20 rebase 分支（含 kernel hijack 交付）在 P800 上全量算子测试 23/23 通过（2026-08-21 实测，构建产物已含 `*_kunlunxin.py`），其中修复的三个算子 `max`/`argmax`/`apply_rotary_pos_emb` 另有 3 算子冒烟 3/3 通过。调试过程中的 quick 测试曾出现设备初始化失败与首个 kernel launch 超时（60s），均已在参数写入顺序修复（参数先于 `xpu_launch_config` 写入）后解决。
 
 详细的算子报错、layout 原理和源码修改见：`docs/libtriton_jit_p800_operator_compile_analysis.md`。
